@@ -1,4 +1,7 @@
 # User-specific files
+# Garatzaile bakoitzaren MySQL kredentzialak
+ApiErreserba/appsettings.Local.json
+
 *.rsuser
 *.suo
 *.user
