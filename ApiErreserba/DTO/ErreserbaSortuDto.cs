@@ -15,9 +15,8 @@ namespace ApiErreserba.DTO
         [Required]
         public DateOnly Data {  get; set; }
 
-        public static Erreserba SortuErreserba(int id, ErreserbaSortuDto dto) => new()
+        public static Erreserba SortuErreserba(ErreserbaSortuDto dto) => new()
         {
-            Id = id,
             Pista_id = dto.Pista_id,
             Bazkidea_id = dto.Bazkidea_id,
             Data = dto.Data,
