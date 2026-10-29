@@ -3,6 +3,7 @@ using ApiErreserba.Models;
 using ApiErreserba.Responses;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
+using System.Data;
 
 namespace ApiErreserba.Controllers
 {
@@ -90,6 +91,40 @@ namespace ApiErreserba.Controllers
                 _logger.LogError(exception, "Errorea {PistaId} pista desgaitzean.", dto.Id);
                 return StatusCode(500, ApiError.Create(500, "datu_basearen_errorea",
                     "Ezin izan dira pista eta haren erreserbak desgaitu."));
+            }
+        }
+
+        [HttpPost("select")]
+        public async Task<ActionResult<ApiResponse<List<Pista>>>> Bistaratu([FromBody] PistaDesgaituDto dto)
+        {
+
+            try
+            {
+                using var con = new MySqlConnection(_connectionString);
+                await con.OpenAsync();
+
+                using var cmd = new MySqlCommand(
+                    "SELECT izena, kirola FROM kiroldegia.pista WHERE desgaituta = 0",
+                    con);
+
+                var lista = new List<Pista>();
+                using var rd = await cmd.ExecuteReaderAsync();
+
+                while (await rd.ReadAsync())
+                {
+                    lista.Add(new Pista
+                    {
+                        Izena = rd.GetString("izena"),
+                        Kirola = rd.GetString("kirola")
+                    });
+                }
+
+                return Ok(ApiResponse<List<Pista>>.Ok(lista, 200, "Pistak bistaratuta."));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiError.Create(500, "datu_basearen_errorea",
+                    "Errorea: " + ex.Message));
             }
         }
     }
