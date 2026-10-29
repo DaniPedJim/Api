@@ -19,6 +19,6 @@ namespace ApiErreserba.Controllers
         [HttpPost("insert")]
         public ActionResult<ApiResponse<Pista>> Gehitu([FromRoute] PistaDesgaituDto dto)
         {
-
+            
         }
     }
